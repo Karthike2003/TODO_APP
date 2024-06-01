@@ -12,7 +12,10 @@ const Signup: React.FC = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         signup(username, email, password);
-        navigate('/login');
+        setUsername('');
+        setEmail('');
+        setPassword('');
+        navigate('/todos'); // Redirect to todos after signup
     };
 
     return (
@@ -24,6 +27,7 @@ const Signup: React.FC = () => {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    required
                     className="w-full p-2 mb-4 border border-gray-300 rounded"
                 />
                 <input
@@ -31,6 +35,7 @@ const Signup: React.FC = () => {
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                     className="w-full p-2 mb-4 border border-gray-300 rounded"
                 />
                 <input
@@ -38,6 +43,7 @@ const Signup: React.FC = () => {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
                     className="w-full p-2 mb-4 border border-gray-300 rounded"
                 />
                 <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Signup</button>
@@ -45,5 +51,4 @@ const Signup: React.FC = () => {
         </div>
     );
 };
-
 export default Signup;
