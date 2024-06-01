@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext,useState,useEffect } from 'react';
 import TodoItem from './TodoItem';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { AuthContext } from '../context/AuthContext';
+import Logout from './Logout'; // Import the Logout component
+
 
 interface Todo {
     task: string;
@@ -8,10 +10,18 @@ interface Todo {
 }
 
 const Todo: React.FC = () => {
-    const [todos, setTodos] = useLocalStorage<Todo[]>('todos', []);
+    
+    const { loggedIn, user } = useContext(AuthContext);
+    const [todos, setTodos] = useState<Todo[]>([]);
     const [task, setTask] = useState<string>('');
     const [filter, setFilter] = useState<string>('all');
     const [searchTerm, setSearchTerm] = useState<string>('');
+
+    useEffect(() => {
+        if (loggedIn && user && user.todos) {
+            setTodos(user.todos.map((todo: string) => ({ task: todo, completed: false })));
+        }
+    }, [loggedIn, user]);
 
     const addTodo = (task: string) => {
         setTodos([...todos, { task, completed: false }]);
@@ -19,7 +29,7 @@ const Todo: React.FC = () => {
 
     const updateTodo = (index: number, updatedTask: string, completed?: boolean) => {
         const newTodos = [...todos];
-        newTodos[index].task = updatedTask;
+        newTodos[index] = { ...newTodos[index], task: updatedTask };
         if (completed !== undefined) {
             newTodos[index].completed = completed;
         }
@@ -40,6 +50,10 @@ const Todo: React.FC = () => {
         if (filter === 'completed') return todo.completed;
         return true;
     }).filter((todo: Todo) => todo.task.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const handleSave = () => {
+        localStorage.setItem('todos', JSON.stringify(todos));
+    };
 
     return (
         <div className="flex justify-center items-center h-screen">
@@ -89,6 +103,10 @@ const Todo: React.FC = () => {
                 {todos.some((todo: Todo) => todo.completed) && (
                     <button onClick={clearCompleted} className="text-sm text-gray-600">Clear Completed</button>
                 )}
+                <div className='flex justify-end space-x-4'>
+                <button onClick={handleSave} className="text-sm w-12 bg-green-500 rounded-sm text-white mt-4">Save</button>
+                {loggedIn && <Logout />} {/* Render Logout component only if user is logged in */}
+                </div>
             </div>
         </div>
     );

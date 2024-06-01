@@ -1,41 +1,53 @@
-import React, { useState } from 'react';
-import Login from './Login';
-import Signup from './Signup';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
-const CombinedAuthPage: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+const Login: React.FC = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const { login } = useContext(AuthContext);
+    const navigate = useNavigate();
 
-    const handleTabClick = (tab: 'login' | 'signup') => {
-        setActiveTab(tab);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const storedUser = localStorage.getItem('loggedInUser');
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            if (user.username === username && user.password === password) {
+                login(username, password);
+                navigate('/todos');
+            } else {
+                alert('Invalid username or password.');
+            }
+        } else {
+            alert('Please sign up before logging in.');
+        }
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-200">
-            <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-                <div className="flex justify-center mb-6">
-                    <button
-                        className={`py-2 px-6 text-lg font-semibold rounded-tl-lg rounded-bl-lg ${
-                            activeTab === 'login' ? 'bg-blue-500 text-white' : 'text-blue-500'
-                        }`}
-                        onClick={() => handleTabClick('login')}
-                    >
-                        Login
-                    </button>
-                    <button
-                        className={`py-2 px-6 text-lg font-semibold rounded-tr-lg rounded-br-lg ${
-                            activeTab === 'signup' ? 'bg-blue-500 text-white' : 'text-blue-500'
-                        }`}
-                        onClick={() => handleTabClick('signup')}
-                    >
-                        Signup
-                    </button>
-                </div>
-                <div className="bg-gray-100 rounded-b-lg p-6">
-                    {activeTab === 'login' ? <Login /> : <Signup />}
-                </div>
-            </div>
+        <div className="flex justify-center items-center h-auto">
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
+                <h2 className="text-2xl font-bold mb-4">Login</h2>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    className="w-full p-2 mb-4 border border-gray-300 rounded"
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="w-full p-2 mb-4 border border-gray-300 rounded"
+                />
+                <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Login</button>
+            </form>
         </div>
     );
 };
 
-export default CombinedAuthPage;
+export default Login;
