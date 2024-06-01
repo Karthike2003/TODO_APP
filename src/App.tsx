@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './components/Login';
-import Signup from './components/Signup';
+import AuthPage from './components/AuthPage';
 import Todo from './components/Todo';
 import { AuthProvider } from './context/AuthContext';
 
@@ -10,14 +9,12 @@ const App: React.FC = () => {
         <AuthProvider>
             <Router>
                 <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
+                    {/* Set the default route to the AuthPage */}
+                    <Route path="/" element={<AuthPage />} />
                     <Route path="/todos" element={<Todo />} />
-                    <Route path="/" element={<Signup />} />
                 </Routes>
             </Router>
         </AuthProvider>
-        
     );
 };
 

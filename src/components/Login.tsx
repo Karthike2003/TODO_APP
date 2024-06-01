@@ -1,50 +1,41 @@
-import React, { useState, useEffect,useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState } from 'react';
+import Login from './Login';
+import Signup from './Signup';
 
-const Login: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const { loggedIn, login } = useContext(AuthContext);
-    const navigate = useNavigate();
+const CombinedAuthPage: React.FC = () => {
+    const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        login(username, password);
-        setUsername('');
-        setPassword('');
+    const handleTabClick = (tab: 'login' | 'signup') => {
+        setActiveTab(tab);
     };
 
-    useEffect(() => {
-        if (loggedIn) {
-            navigate('/todos');
-        }
-    }, [loggedIn, navigate]);
-
     return (
-        <div className="flex justify-center items-center h-screen">
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
-                <h2 className="text-2xl font-bold mb-4">Login</h2>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                    className="w-full p-2 mb-4 border border-gray-300 rounded"
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="w-full p-2 mb-4 border border-gray-300 rounded"
-                />
-                <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Login</button>
-            </form>
+        <div className="flex justify-center items-center h-screen bg-gray-200">
+            <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+                <div className="flex justify-center mb-6">
+                    <button
+                        className={`py-2 px-6 text-lg font-semibold rounded-tl-lg rounded-bl-lg ${
+                            activeTab === 'login' ? 'bg-blue-500 text-white' : 'text-blue-500'
+                        }`}
+                        onClick={() => handleTabClick('login')}
+                    >
+                        Login
+                    </button>
+                    <button
+                        className={`py-2 px-6 text-lg font-semibold rounded-tr-lg rounded-br-lg ${
+                            activeTab === 'signup' ? 'bg-blue-500 text-white' : 'text-blue-500'
+                        }`}
+                        onClick={() => handleTabClick('signup')}
+                    >
+                        Signup
+                    </button>
+                </div>
+                <div className="bg-gray-100 rounded-b-lg p-6">
+                    {activeTab === 'login' ? <Login /> : <Signup />}
+                </div>
+            </div>
         </div>
     );
 };
 
-export default Login;
+export default CombinedAuthPage;

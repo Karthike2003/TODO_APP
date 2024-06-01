@@ -19,7 +19,7 @@ const Signup: React.FC = () => {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-auto">
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
                 <h2 className="text-2xl font-bold mb-4">Signup</h2>
                 <input
