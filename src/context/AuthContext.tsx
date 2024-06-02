@@ -5,7 +5,7 @@ interface User {
     username: string;
     email: string;
     password: string;
-    todos: string[]; // Array of todo items
+    todos: string[]; 
 }
 
 interface AuthContextProps {
@@ -13,15 +13,15 @@ interface AuthContextProps {
     user: User | null;
     login: (username: string, password: string) => void;
     signup: (username: string, email: string, password: string) => void;
-    logout: () => void; // Add logout function
+    logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
     loggedIn: false,
     user: null,
-    login: () => {},  // Placeholder function
-    signup: () => {}, // Placeholder function
-    logout: () => {}, // Placeholder function
+    login: () => {},  
+    signup: () => {}, 
+    logout: () => {}, 
 });
 
 interface AuthProviderProps {
@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-    // Check if there's a logged-in user in local storage on component mount
+    
     useEffect(() => {
         const loggedInUser = localStorage.getItem('loggedInUser');
         if (loggedInUser) {
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             username,
             email,
             password,
-            todos: [] // Initialize an empty todo list for the new user
+            todos: [] 
         };
         setUsers([...users, newUser]);
         localStorage.setItem('loggedInUser', JSON.stringify(newUser));

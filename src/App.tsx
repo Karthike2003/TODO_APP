@@ -9,7 +9,7 @@ const App: React.FC = () => {
         <AuthProvider>
             <Router>
                 <Routes>
-                    {/* Set the default route to the AuthPage */}
+                   
                     <Route path="/" element={<AuthPage />} />
                     <Route path="/todos" element={<Todo />} />
                 </Routes>

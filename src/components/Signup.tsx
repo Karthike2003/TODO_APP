@@ -15,7 +15,7 @@ const Signup: React.FC = () => {
         setUsername('');
         setEmail('');
         setPassword('');
-        navigate('/todos'); // Redirect to todos after signup
+        navigate('/todos');
     };
 
     return (

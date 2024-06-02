@@ -1,7 +1,7 @@
 import React, { useContext,useState,useEffect } from 'react';
 import TodoItem from './TodoItem';
 import { AuthContext } from '../context/AuthContext';
-import Logout from './Logout'; // Import the Logout component
+import Logout from './Logout'; 
 
 
 interface Todo {
@@ -105,7 +105,7 @@ const Todo: React.FC = () => {
                 )}
                 <div className='flex justify-end space-x-4'>
                 <button onClick={handleSave} className="text-sm w-12 bg-green-500 rounded-sm text-white mt-4">Save</button>
-                {loggedIn && <Logout />} {/* Render Logout component only if user is logged in */}
+                {loggedIn && <Logout />}
                 </div>
             </div>
         </div>

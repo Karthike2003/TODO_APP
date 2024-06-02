@@ -40,7 +40,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index, updateTodo, deleteTodo
                 ) : (
                     <>
                         <button onClick={() => setIsEditing(true)} className="bg-yellow-500 text-white p-2 rounded mr-2">Edit</button>
-                        <button onClick={() => deleteTodo(index)} className="bg-red-500 text-white p-2 rounded">Delete</button>
+                        <button onClick={() => deleteTodo(index)} className="bg-red-800  text-white p-2 rounded ">Delete</button>
                     </>
                 )}
             </div>

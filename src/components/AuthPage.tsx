@@ -12,7 +12,7 @@ const AuthPage: React.FC = () => {
     return (
         <div className="flex justify-center items-center h-screen">
             <div className="w-80 justify-between">
-                <div className="border rounded">
+                <div className="border rounded bg-white">
                     <div className="flex">
                         <button
                             className={`flex-1 py-2 rounded-tl-md ${
