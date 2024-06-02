@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useState, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface User {
+    id: string; 
     username: string;
     email: string;
     password: string;
@@ -41,37 +42,62 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const user = JSON.parse(loggedInUser);
             setCurrentUser(user);
             setLoggedIn(true);
+        } else {
+            setLoggedIn(false);
         }
     }, []);
 
     const login = (username: string, password: string) => {
-        const user = users.find((u: User) => u.username === username && u.password === password);
-        if (user) {
-            localStorage.setItem('loggedInUser', JSON.stringify(user));
-            setCurrentUser(user);
-            setLoggedIn(true);
+        const id = `${username}${password}`;
+        const signedFlag = localStorage.getItem(`signed_${id}`);
+        if (signedFlag) {
+            const user = users.find((u: User) => u.username === username && u.password === password);
+            if (user) {
+                localStorage.setItem('loggedInUser', JSON.stringify(user));
+                setCurrentUser(user);
+                setLoggedIn(true);
+                localStorage.setItem(`loggedIn_${id}`, 'true'); 
+            } else {
+                alert('Invalid username or password.');
+            }
+        } else {
+            alert('Please sign up before logging in.');
         }
     };
 
     const signup = (username: string, email: string, password: string) => {
+        const id = `${username}${password}`;
+        
+    if (localStorage.getItem(`user_${id}`)) {
+        alert('You are already registered. Please log in.');
+        return false;
+    }
+  
         const newUser: User = {
+            id,
             username,
             email,
             password,
             todos: [] 
         };
+        
         setUsers([...users, newUser]);
-        localStorage.setItem('loggedInUser', JSON.stringify(newUser));
+        localStorage.setItem(`user_${id}`, JSON.stringify(newUser));
+        localStorage.setItem(`signed_${id}`, 'true');
+        localStorage.setItem('loggedInUser', JSON.stringify(newUser)); 
         setCurrentUser(newUser);
         setLoggedIn(true);
+        localStorage.setItem(`loggedIn_${id}`, 'true'); 
+        return true;
+    
     };
-
+    
     const logout = () => {
+        const id = currentUser ? `${currentUser.username}${currentUser.password}` : '';
         localStorage.removeItem('loggedInUser');
+        localStorage.removeItem(`loggedIn_${id}`); 
         setCurrentUser(null);
         setLoggedIn(false);
-        
-
     };
 
     return (
@@ -79,4 +105,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             {children}
         </AuthContext.Provider>
     );
+    
 };

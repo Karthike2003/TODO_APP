@@ -10,11 +10,13 @@ const Login: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const storedUser = localStorage.getItem('loggedInUser');
-        if (storedUser) {
-            const user = JSON.parse(storedUser);
-            if (user.username === username && user.password === password) {
-                login(username, password);
+        const id = `${username}${password}`;
+        const isSignedUp = localStorage.getItem(`signed_${id}`) === 'true';
+
+        if (isSignedUp) {
+            login(username, password);
+            const isLoggedIn = localStorage.getItem(`loggedIn_${id}`) === 'true';
+            if (isLoggedIn) {
                 navigate('/todos');
             } else {
                 alert('Invalid username or password.');

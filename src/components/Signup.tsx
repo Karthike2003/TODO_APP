@@ -12,6 +12,7 @@ const Signup: React.FC = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         signup(username, email, password);
+        
         setUsername('');
         setEmail('');
         setPassword('');

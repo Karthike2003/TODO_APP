@@ -1,8 +1,7 @@
-import React, { useContext,useState,useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import TodoItem from './TodoItem';
 import { AuthContext } from '../context/AuthContext';
-import Logout from './Logout'; 
-
+import Logout from './Logout';
 
 interface Todo {
     task: string;
@@ -10,7 +9,6 @@ interface Todo {
 }
 
 const Todo: React.FC = () => {
-    
     const { loggedIn, user } = useContext(AuthContext);
     const [todos, setTodos] = useState<Todo[]>([]);
     const [task, setTask] = useState<string>('');
@@ -19,9 +17,15 @@ const Todo: React.FC = () => {
 
     useEffect(() => {
         if (loggedIn && user && user.todos) {
-            setTodos(user.todos.map((todo: string) => ({ task: todo, completed: false })));
+            const storedTodos = localStorage.getItem(`todos_${user.id}`);
+            if (storedTodos) {
+                setTodos(JSON.parse(storedTodos));
+            } else {
+                setTodos(user.todos.map((todo: string) => ({ task: todo, completed: false })));
+            }
         }
     }, [loggedIn, user]);
+    
 
     const addTodo = (task: string) => {
         setTodos([...todos, { task, completed: false }]);
@@ -52,7 +56,12 @@ const Todo: React.FC = () => {
     }).filter((todo: Todo) => todo.task.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const handleSave = () => {
-        localStorage.setItem('todos', JSON.stringify(todos));
+        if (user) {  
+            localStorage.setItem(`todos_${user.id}`, JSON.stringify(todos));
+            alert('Todos have been saved!');
+        } else {
+            alert('User not found. Please log in.');
+        }
     };
 
     return (
@@ -103,9 +112,9 @@ const Todo: React.FC = () => {
                 {todos.some((todo: Todo) => todo.completed) && (
                     <button onClick={clearCompleted} className="text-sm text-gray-600">Clear Completed</button>
                 )}
-                <div className='flex justify-end space-x-4'>
-                <button onClick={handleSave} className="text-sm w-12 bg-green-500 rounded-sm text-white mt-4">Save</button>
-                {loggedIn && <Logout />}
+                <div className="flex justify-end space-x-4">
+                    <button onClick={handleSave} className="text-sm w-12 bg-green-500 rounded-sm text-white mt-4">Save</button>
+                    {loggedIn && <Logout />}
                 </div>
             </div>
         </div>
